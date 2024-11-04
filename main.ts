@@ -103,10 +103,10 @@ let GELB = 0
 let ROT2 = 0
 let B = 0
 let ampel_modus = 0
-radio.setGroup(24)
-let gelb_modus = false
-let ampel_v_l = 0
 let a_farben: number[] = []
+let ampel_v_l = 0
+let gelb_modus = false
+radio.setGroup(24)
 ampel_modus = 1
 B = 1
 ROT2 = 1
