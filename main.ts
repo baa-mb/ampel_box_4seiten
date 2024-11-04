@@ -1,4 +1,4 @@
-function ampel_ein () {
+function ampel_ein() {
     let ROT = 0
     amp_seite += 1
     // amp_seite=(amp_seite + 1) % 2;
@@ -24,23 +24,32 @@ function ampel_ein () {
     licht(B, GELB, 0)
     basic.pause(Math.round(kurz_blink / 3 * 2))
 }
-function licht (amp_nr: number, lampe: number, ein: number) {
+function licht(amp_nr: number, lampe: number, ein: number) {
     a_ampeln[amp_nr].setPixelColor(lampe, neopixel.colors(a_farben[lampe]) * ein)
     a_ampeln[amp_nr].show()
 }
 input.onButtonPressed(Button.A, function () {
-    norm_modus = true
+    ampel_modus = 1
 })
-function ampel_warn () {
+function ampel_warn() {
     gelb_modus = !(gelb_modus)
     let ein_aus = gelb_modus ? 1 : 0
-licht(A, GELB, ein_aus)
+    licht(A, GELB, ein_aus)
     licht(B, GELB, ein_aus)
     basic.pause(kurz_blink)
 }
-function init () {
+function ampel_aus() {
+    licht(A, ROT, 0)
+    licht(A, GELB, 0)
+    licht(A, GRUN, 0)
+    licht(B, ROT, 0)
+    licht(B, GELB, 0)
+    licht(B, GRUN, 0)
+}
+
+function init() {
     gelb_modus = true
-    norm_modus = true
+    ampel_modus = 1
     a_farben = [NeoPixelColors.Red, NeoPixelColors.Yellow, NeoPixelColors.Green]
     lang = 8000
     kurz = 1500
@@ -52,35 +61,43 @@ function init () {
     a_ampeln = [ampel_v, ampel_l]
 }
 input.onButtonPressed(Button.B, function () {
-    norm_modus = false
+    ampel_modus = 2
 })
-function blink_licht (amp_nr: number, lampe: number, farbe: number) {
+input.onButtonPressed(Button.AB, function () {
+    ampel_modus = 0
+})
+function blink_licht(amp_nr: number, lampe: number, farbe: number) {
     a_ampeln[amp_nr].setPixelColor(lampe, neopixel.colors(a_farben[lampe]))
     a_ampeln[amp_nr].show()
 }
 let ampel_l: neopixel.Strip = null
 let ampel_v: neopixel.Strip = null
-let norm_modus = false
+let ampel_modus: number = 1
 let a_ampeln: neopixel.Strip[] = []
 let kurz = 0
 let kurz_blink = 0
-let lang = 0
-let B = 0
-let A = 0
+let lang = 0;
+let A = 0;
+let B = 1;
+
+const ROT = 1
+const GELB = 1
+const GRUN = 2
 let amp_seite = 0
-let GRUN = 0
-let GELB = 0
+
 let a_farben: number[] = []
 let ampel_v_l = 0
 let gelb_modus = false
-GELB = 1
-GRUN = 2
+
 basic.showIcon(IconNames.No)
 init()
 basic.forever(function () {
-    if (norm_modus) {
+    if (ampel_modus == 1) {
         ampel_ein()
-    } else {
+    } else if (ampel_modus == 2) {
         ampel_warn()
+    } else if (ampel_modus == 0) {
+        ampel_aus()
     }
+
 })
